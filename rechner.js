@@ -326,83 +326,95 @@
     return;
   }
 
-  var CSS = ""
-    + ":host{display:block;color:var(--text);font:16px/1.45 Segoe UI,Helvetica Neue,sans-serif;--primary:#1f6b4a;--bg:#f6f3ec;--text:#1c1c1c;--on-primary:#fff;--line:color-mix(in srgb,var(--text) 14%,transparent);--muted:color-mix(in srgb,var(--text) 68%,transparent)}"
-    + "*{box-sizing:border-box}"
-    + "[hidden]{display:none !important}"
-    + ".panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;color:var(--text)}"
-    + ".brand{display:flex;gap:12px;align-items:center;margin-bottom:10px}"
-    + ".mark,.brand img{width:48px;height:48px;border-radius:12px;flex:0 0 auto}"
-    + ".brand img{object-fit:contain;background:#fff}"
-    + ".mark{display:grid;place-items:center;background:var(--primary);color:var(--on-primary);font-weight:700}"
-    + ".eyebrow{margin:0 0 2px;color:var(--primary);font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}"
-    + "h1,h2{margin:0;letter-spacing:-.02em;line-height:1.2;color:var(--text)}"
-    + "h1{font-size:1.45rem}h2{font-size:1.15rem;margin-bottom:8px}"
-    + ".intro,.muted,.hint,.footnote{color:var(--muted)}"
-    + ".intro{margin:0 0 16px}"
-    + ".field{margin-bottom:14px}"
-    + ".row{display:grid;grid-template-columns:1fr 1fr;gap:12px}"
-    + "label,legend{display:block;font-weight:600;font-size:.92rem;margin-bottom:6px;padding:0}"
-    + "fieldset{border:0;margin:0 0 14px;padding:0}"
-    + "input,select{width:100%;height:46px;border-radius:8px;border:1px solid var(--line);padding:0 12px;background:#fff;color:var(--text);font:inherit}"
-    + "input[type=range]{height:auto;padding:0;accent-color:var(--primary)}"
-    + ".hint{margin:6px 0 0;font-size:.82rem}"
-    + ".choices{display:flex;flex-wrap:wrap;gap:8px}"
-    + ".choices label{position:relative;margin:0;border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;font-weight:600}"
-    + ".choices input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;height:100%}"
-    + ".choices label:has(input:checked){background:var(--primary);color:var(--on-primary);border-color:var(--primary)}"
-    + ".choices label:has(input:focus-visible){outline:2px solid var(--primary);outline-offset:2px}"
-    + "button.primary,a.primary{width:100%;height:48px;border:0;border-radius:8px;background:var(--primary);color:var(--on-primary);font:inherit;font-weight:700;cursor:pointer;display:grid;place-items:center;text-decoration:none}"
-    + "a.secondary{height:48px;border-radius:8px;border:1px solid var(--primary);color:var(--primary);background:#fff;font:inherit;font-weight:700;display:grid;place-items:center;text-decoration:none}"
-    + "button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--primary);outline-offset:2px}"
-    + ".error{background:#fdecea;color:#8a1f11;padding:10px 12px;border-radius:8px;margin:0 0 14px}"
-    + ".result{margin-top:16px}"
-    + ".metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}"
-    + ".metrics article{background:var(--bg);border-radius:10px;padding:12px}"
-    + ".metrics span{display:block;color:var(--muted);font-size:.82rem}"
-    + ".metrics strong{display:block;margin-top:4px;font-size:1.35rem;letter-spacing:-.02em}"
-    + ".metric-wide{grid-column:1 / -1}"
-    + ".metric-note{margin:6px 0 0;color:var(--muted);font-size:.85rem;font-weight:400}"
-    + ".note{border-left:4px solid var(--primary);background:color-mix(in srgb,var(--primary) 12%,white);padding:12px 14px;border-radius:0 10px 10px 0;margin:0 0 12px}"
-    + ".footnote{font-size:.8rem;margin:0}"
-    + ".footnote + .footnote{margin-top:6px}"
-    + ".text-button{margin-left:8px;padding:0;border:0;background:none;color:var(--primary);font:inherit;font-size:.8rem;font-weight:700;text-decoration:underline;cursor:pointer}"
-    + ".contact{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}"
-    + ".contact .hint{grid-column:1 / -1;margin:0}"
-    + "@media (max-width:520px){.row,.metrics,.contact{grid-template-columns:1fr}.panel{padding:14px}}";
+  function bang(css) {
+    return css.replace(/\{([^{}]*)\}/g, function (_, body) {
+      var decls = body.split(";").map(function (part) { return part.trim(); }).filter(Boolean);
+      if (!decls.length) return "{" + body + "}";
+      return "{" + decls.map(function (decl) {
+        if (decl.indexOf(":") === -1 || decl.indexOf("!important") !== -1) return decl;
+        return decl + " !important";
+      }).join(";") + "}";
+    });
+  }
+
+  var CSS = bang(""
+    + ":host{all:initial;display:block;width:100%;font-family:'Segoe UI','Helvetica Neue',sans-serif;font-size:16px;line-height:1.45;color:#1c1c1c;--epax-solarrechner-primary:#1f6b4a;--epax-solarrechner-bg:#f6f3ec;--epax-solarrechner-text:#1c1c1c;--epax-solarrechner-on-primary:#fff;--epax-solarrechner-line:color-mix(in srgb,var(--epax-solarrechner-text) 14%,transparent);--epax-solarrechner-muted:color-mix(in srgb,var(--epax-solarrechner-text) 68%,transparent)}"
+    + ".epax-solarrechner-panel,.epax-solarrechner-panel *{box-sizing:border-box;font-family:'Segoe UI','Helvetica Neue',sans-serif;font-style:normal}"
+    + ".epax-solarrechner-panel [hidden]{display:none}"
+    + ".epax-solarrechner-panel{background:#fff;border:1px solid var(--epax-solarrechner-line);border-radius:16px;padding:18px;color:var(--epax-solarrechner-text);font-weight:400;font-size:16px;line-height:1.45}"
+    + ".epax-solarrechner-brand{display:flex;gap:12px;align-items:center;margin:0 0 10px}"
+    + ".epax-solarrechner-mark,.epax-solarrechner-logo{width:48px;height:48px;border-radius:12px;flex:0 0 auto}"
+    + ".epax-solarrechner-logo{object-fit:contain;background:#fff}"
+    + ".epax-solarrechner-mark{display:grid;place-items:center;background:var(--epax-solarrechner-primary);color:var(--epax-solarrechner-on-primary);font-weight:700}"
+    + ".epax-solarrechner-eyebrow{margin:0 0 2px;color:var(--epax-solarrechner-primary);font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}"
+    + ".epax-solarrechner-title,.epax-solarrechner-heading{margin:0;letter-spacing:-.02em;line-height:1.2;color:var(--epax-solarrechner-text);font-weight:700}"
+    + ".epax-solarrechner-title{font-size:1.45rem}"
+    + ".epax-solarrechner-heading{font-size:1.15rem;margin-bottom:8px}"
+    + ".epax-solarrechner-intro,.epax-solarrechner-muted,.epax-solarrechner-hint,.epax-solarrechner-footnote{color:var(--epax-solarrechner-muted);margin:0}"
+    + ".epax-solarrechner-intro{margin:0 0 16px}"
+    + ".epax-solarrechner-field{margin:0 0 14px}"
+    + ".epax-solarrechner-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}"
+    + ".epax-solarrechner-label,.epax-solarrechner-legend{display:block;font-weight:600;font-size:.92rem;margin:0 0 6px;padding:0;color:var(--epax-solarrechner-text)}"
+    + ".epax-solarrechner-fieldset{border:0;margin:0 0 14px;padding:0;min-inline-size:0}"
+    + ".epax-solarrechner-control{width:100%;height:46px;border-radius:8px;border:1px solid var(--epax-solarrechner-line);padding:0 12px;background:#fff;color:var(--epax-solarrechner-text);font-size:16px;line-height:1.45;box-shadow:none;appearance:auto}"
+    + ".epax-solarrechner-range{height:auto;padding:0;border:0;background:transparent;accent-color:var(--epax-solarrechner-primary)}"
+    + ".epax-solarrechner-hint{margin:6px 0 0;font-size:.82rem}"
+    + ".epax-solarrechner-choices{display:flex;flex-wrap:wrap;gap:8px}"
+    + ".epax-solarrechner-choice{position:relative;display:inline-block;margin:0;border:1px solid var(--epax-solarrechner-line);border-radius:999px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:.92rem;color:var(--epax-solarrechner-text);background:#fff}"
+    + ".epax-solarrechner-choice-input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;height:100%;width:100%}"
+    + ".epax-solarrechner-choice:has(.epax-solarrechner-choice-input:checked){background:var(--epax-solarrechner-primary);color:var(--epax-solarrechner-on-primary);border-color:var(--epax-solarrechner-primary)}"
+    + ".epax-solarrechner-choice:has(.epax-solarrechner-choice-input:focus-visible){outline:2px solid var(--epax-solarrechner-primary);outline-offset:2px}"
+    + ".epax-solarrechner-primary{width:100%;height:48px;border:0;border-radius:8px;background:var(--epax-solarrechner-primary);color:var(--epax-solarrechner-on-primary);font-size:16px;font-weight:700;cursor:pointer;display:grid;place-items:center;text-decoration:none;box-shadow:none}"
+    + ".epax-solarrechner-secondary{width:100%;height:48px;border-radius:8px;border:1px solid var(--epax-solarrechner-primary);color:var(--epax-solarrechner-primary);background:#fff;font-size:16px;font-weight:700;display:grid;place-items:center;text-decoration:none;box-shadow:none}"
+    + ".epax-solarrechner-panel :focus-visible{outline:2px solid var(--epax-solarrechner-primary);outline-offset:2px}"
+    + ".epax-solarrechner-error{background:#fdecea;color:#8a1f11;padding:10px 12px;border-radius:8px;margin:0 0 14px}"
+    + ".epax-solarrechner-result{margin-top:16px}"
+    + ".epax-solarrechner-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}"
+    + ".epax-solarrechner-metric{background:var(--epax-solarrechner-bg);border-radius:10px;padding:12px;margin:0}"
+    + ".epax-solarrechner-metric-label{display:block;color:var(--epax-solarrechner-muted);font-size:.82rem;font-weight:400}"
+    + ".epax-solarrechner-metric-value{display:block;margin-top:4px;font-size:1.35rem;letter-spacing:-.02em;font-weight:700;color:var(--epax-solarrechner-text)}"
+    + ".epax-solarrechner-metric-wide{grid-column:1 / -1}"
+    + ".epax-solarrechner-metric-note{margin:6px 0 0;color:var(--epax-solarrechner-muted);font-size:.85rem;font-weight:400}"
+    + ".epax-solarrechner-note{border-left:4px solid var(--epax-solarrechner-primary);background:color-mix(in srgb,var(--epax-solarrechner-primary) 12%,white);padding:12px 14px;border-radius:0 10px 10px 0;margin:0 0 12px;color:var(--epax-solarrechner-text)}"
+    + ".epax-solarrechner-footnote{font-size:.8rem;margin:0}"
+    + ".epax-solarrechner-footnote + .epax-solarrechner-footnote{margin-top:6px}"
+    + ".epax-solarrechner-text-button{margin-left:8px;padding:0;border:0;background:transparent;color:var(--epax-solarrechner-primary);font-size:.8rem;font-weight:700;text-decoration:underline;cursor:pointer;box-shadow:none}"
+    + ".epax-solarrechner-contact{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}"
+    + ".epax-solarrechner-contact .epax-solarrechner-hint{grid-column:1 / -1;margin:0}"
+    + "@media (max-width:520px){.epax-solarrechner-row,.epax-solarrechner-metrics,.epax-solarrechner-contact{grid-template-columns:1fr}.epax-solarrechner-panel{padding:14px}}");
 
   var HTML = ""
-    + '<section class="panel">'
-    + '<header class="brand"><img id="logo" alt="" hidden><div id="mark" class="mark" hidden>PV</div><div><p class="eyebrow" id="brand-name" hidden></p><h1>Was passt auf eine Dachfläche?</h1></div></header>'
-    + '<p class="intro">Tragen Sie die Daten einer Dachfläche ein. Sie bekommen eine grobe Einschätzung zu Größe, Jahresertrag und Speicher.</p>'
-    + '<p id="error" class="error" hidden></p>'
-    + '<form id="calc-form">'
-    + '<div class="row"><div class="field"><label for="plz">Postleitzahl</label><input id="plz" name="plz" inputmode="numeric" autocomplete="postal-code" maxlength="5" pattern="[0-9]{5}" required></div>'
-    + '<div class="field"><label for="roof">Dachfläche in m²</label><input id="roof" name="roof" inputmode="decimal" required></div></div>'
-    + '<div class="field"><label for="tilt">Dachneigung <span id="tilt-out">30°</span></label><input id="tilt" name="tilt" type="range" min="0" max="70" value="30">'
-    + '<p class="hint">0° ist ein Flachdach, viele Satteldächer liegen um 30°. Den Wert können Sie stehen lassen, wenn die Neigung nicht genau bekannt ist.</p></div>'
-    + '<div class="field"><label for="orientation">Himmelsrichtung</label><select id="orientation" name="orientation">'
+    + '<section class="epax-solarrechner-panel">'
+    + '<header class="epax-solarrechner-brand"><img id="logo" class="epax-solarrechner-logo" alt="" hidden><div id="mark" class="epax-solarrechner-mark" hidden>PV</div><div><p class="epax-solarrechner-eyebrow" id="brand-name" hidden></p><h1 class="epax-solarrechner-title">Was passt auf eine Dachfläche?</h1></div></header>'
+    + '<p class="epax-solarrechner-intro">Tragen Sie die Daten einer Dachfläche ein. Sie bekommen eine grobe Einschätzung zu Größe, Jahresertrag und Speicher.</p>'
+    + '<p id="error" class="epax-solarrechner-error" hidden></p>'
+    + '<form id="calc-form" class="epax-solarrechner-form">'
+    + '<div class="epax-solarrechner-row"><div class="epax-solarrechner-field"><label class="epax-solarrechner-label" for="plz">Postleitzahl</label><input id="plz" class="epax-solarrechner-control" name="plz" inputmode="numeric" autocomplete="postal-code" maxlength="5" pattern="[0-9]{5}" required></div>'
+    + '<div class="epax-solarrechner-field"><label class="epax-solarrechner-label" for="roof">Dachfläche in m²</label><input id="roof" class="epax-solarrechner-control" name="roof" inputmode="decimal" required></div></div>'
+    + '<div class="epax-solarrechner-field"><label class="epax-solarrechner-label" for="tilt">Dachneigung <span id="tilt-out">30°</span></label><input id="tilt" class="epax-solarrechner-control epax-solarrechner-range" name="tilt" type="range" min="0" max="70" value="30">'
+    + '<p class="epax-solarrechner-hint">0° ist ein Flachdach, viele Satteldächer liegen um 30°. Den Wert können Sie stehen lassen, wenn die Neigung nicht genau bekannt ist.</p></div>'
+    + '<div class="epax-solarrechner-field"><label class="epax-solarrechner-label" for="orientation">Himmelsrichtung</label><select id="orientation" class="epax-solarrechner-control" name="orientation">'
     + '<option value="sued">Süd</option><option value="suedwest">Südwest</option><option value="suedost">Südost</option><option value="west">West</option><option value="ost">Ost</option>'
     + '<option value="nordwest">Nordwest</option><option value="nordost">Nordost</option><option value="nord">Nord</option></select>'
-    + '<p class="hint">Die Himmelsrichtung der Dachfläche, die belegt werden soll.</p></div>'
-    + '<fieldset><legend>Verschattung</legend><div class="choices">'
-    + '<label><input type="radio" name="shading" value="keine" checked><span>Keine</span></label>'
-    + '<label><input type="radio" name="shading" value="leicht"><span>Leicht</span></label>'
-    + '<label><input type="radio" name="shading" value="mittel"><span>Mittel</span></label>'
-    + '<label><input type="radio" name="shading" value="stark"><span>Stark</span></label>'
-    + '</div><p class="hint">Bäume, Gauben oder Nachbargebäude, die einen Teil des Daches abschatten.</p></fieldset>'
-    + '<div class="field"><label for="consumption">Jahresstromverbrauch in kWh, optional</label><input id="consumption" name="consumption" inputmode="numeric" placeholder="z. B. 4500">'
-    + '<p class="hint">Damit werden Speicher und Stromkosten am eigenen Verbrauch ausgerichtet. Ohne Angabe gilt für den Speicher etwa 1 kWh je kWp.</p></div>'
-    + '<button class="primary" id="calc-submit" type="submit">Anlage berechnen</button></form>'
-    + '<section id="result" class="result" hidden><h2>Ihre Einschätzung</h2><p id="result-place" class="muted"></p><p id="result-summary" class="muted"></p>'
-    + '<div class="metrics"><article><span>Anlagengröße</span><strong id="m-kwp"></strong></article><article><span>Module</span><strong id="m-modules"></strong></article>'
-    + '<article><span>Jahresertrag</span><strong id="m-yield"></strong></article><article><span>Speicher</span><strong id="m-storage"></strong></article>'
-    + '<article id="savings" class="metric-wide" hidden><span>Stromkosten im Jahr</span><strong id="m-savings"></strong><p id="savings-note" class="metric-note"></p></article></div>'
-    + '<p id="storage-note" class="note"></p>'
-    + '<p class="footnote"><span>Unverbindliche Schätzung</span> <button type="button" id="more-info" class="text-button" aria-expanded="false" aria-controls="footnote">Mehr Infos</button></p>'
-    + '<p id="footnote" class="footnote" hidden></p>'
-    + '<div id="contact" class="contact" hidden><a class="primary" id="call" hidden>Anrufen</a><a class="secondary" id="mail" hidden>E-Mail schreiben</a>'
-    + '<p id="mail-hint" class="hint" hidden>Die E-Mail enthält die technischen Angaben. Sie wird in Ihrem Mailprogramm geöffnet und von dort gesendet.</p></div>'
+    + '<p class="epax-solarrechner-hint">Die Himmelsrichtung der Dachfläche, die belegt werden soll.</p></div>'
+    + '<fieldset class="epax-solarrechner-fieldset"><legend class="epax-solarrechner-legend">Verschattung</legend><div class="epax-solarrechner-choices">'
+    + '<label class="epax-solarrechner-choice"><input class="epax-solarrechner-choice-input" type="radio" name="shading" value="keine" checked><span>Keine</span></label>'
+    + '<label class="epax-solarrechner-choice"><input class="epax-solarrechner-choice-input" type="radio" name="shading" value="leicht"><span>Leicht</span></label>'
+    + '<label class="epax-solarrechner-choice"><input class="epax-solarrechner-choice-input" type="radio" name="shading" value="mittel"><span>Mittel</span></label>'
+    + '<label class="epax-solarrechner-choice"><input class="epax-solarrechner-choice-input" type="radio" name="shading" value="stark"><span>Stark</span></label>'
+    + '</div><p class="epax-solarrechner-hint">Bäume, Gauben oder Nachbargebäude, die einen Teil des Daches abschatten.</p></fieldset>'
+    + '<div class="epax-solarrechner-field"><label class="epax-solarrechner-label" for="consumption">Jahresstromverbrauch in kWh, optional</label><input id="consumption" class="epax-solarrechner-control" name="consumption" inputmode="numeric" placeholder="z. B. 4500">'
+    + '<p class="epax-solarrechner-hint">Damit werden Speicher und Stromkosten am eigenen Verbrauch ausgerichtet. Ohne Angabe gilt für den Speicher etwa 1 kWh je kWp.</p></div>'
+    + '<button class="epax-solarrechner-primary" id="calc-submit" type="submit">Anlage berechnen</button></form>'
+    + '<section id="result" class="epax-solarrechner-result" hidden><h2 class="epax-solarrechner-heading">Ihre Einschätzung</h2><p id="result-place" class="epax-solarrechner-muted"></p><p id="result-summary" class="epax-solarrechner-muted"></p>'
+    + '<div class="epax-solarrechner-metrics"><article class="epax-solarrechner-metric"><span class="epax-solarrechner-metric-label">Anlagengröße</span><strong id="m-kwp" class="epax-solarrechner-metric-value"></strong></article><article class="epax-solarrechner-metric"><span class="epax-solarrechner-metric-label">Module</span><strong id="m-modules" class="epax-solarrechner-metric-value"></strong></article>'
+    + '<article class="epax-solarrechner-metric"><span class="epax-solarrechner-metric-label">Jahresertrag</span><strong id="m-yield" class="epax-solarrechner-metric-value"></strong></article><article class="epax-solarrechner-metric"><span class="epax-solarrechner-metric-label">Speicher</span><strong id="m-storage" class="epax-solarrechner-metric-value"></strong></article>'
+    + '<article id="savings" class="epax-solarrechner-metric epax-solarrechner-metric-wide" hidden><span class="epax-solarrechner-metric-label">Stromkosten im Jahr</span><strong id="m-savings" class="epax-solarrechner-metric-value"></strong><p id="savings-note" class="epax-solarrechner-metric-note"></p></article></div>'
+    + '<p id="storage-note" class="epax-solarrechner-note"></p>'
+    + '<p class="epax-solarrechner-footnote"><span>Unverbindliche Schätzung</span> <button type="button" id="more-info" class="epax-solarrechner-text-button" aria-expanded="false" aria-controls="footnote">Mehr Infos</button></p>'
+    + '<p id="footnote" class="epax-solarrechner-footnote" hidden></p>'
+    + '<div id="contact" class="epax-solarrechner-contact" hidden><a class="epax-solarrechner-primary" id="call" hidden>Anrufen</a><a class="epax-solarrechner-secondary" id="mail" hidden>E-Mail schreiben</a>'
+    + '<p id="mail-hint" class="epax-solarrechner-hint" hidden>Die E-Mail enthält die technischen Angaben. Sie wird in Ihrem Mailprogramm geöffnet und von dort gesendet.</p></div>'
     + '</section></section>';
 
   function boot() {
@@ -430,8 +442,9 @@
     var callHref = telHref(phone);
     var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    q(".panel").style.setProperty("--primary", color);
-    q(".panel").style.setProperty("--on-primary", isLight(color) ? "#1c1c1c" : "#ffffff");
+    var panel = q(".epax-solarrechner-panel");
+    panel.style.setProperty("--epax-solarrechner-primary", color, "important");
+    panel.style.setProperty("--epax-solarrechner-on-primary", isLight(color) ? "#1c1c1c" : "#ffffff", "important");
     if (name) {
       q("#brand-name").hidden = false;
       q("#brand-name").textContent = name;
