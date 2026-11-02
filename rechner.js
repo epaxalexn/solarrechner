@@ -338,10 +338,10 @@
   }
 
   var CSS = bang(""
-    + ":host{all:initial;display:block;width:100%;font-family:'Segoe UI','Helvetica Neue',sans-serif;font-size:16px;line-height:1.45;color:#1c1c1c;--epax-solarrechner-primary:#1f6b4a;--epax-solarrechner-bg:#f6f3ec;--epax-solarrechner-text:#1c1c1c;--epax-solarrechner-on-primary:#fff;--epax-solarrechner-line:color-mix(in srgb,var(--epax-solarrechner-text) 14%,transparent);--epax-solarrechner-muted:color-mix(in srgb,var(--epax-solarrechner-text) 68%,transparent)}"
+    + ":host{all:initial;display:block;width:100%;max-width:640px;box-sizing:border-box;font-family:'Segoe UI','Helvetica Neue',sans-serif;font-size:16px;line-height:1.45;color:#1c1c1c;--epax-solarrechner-primary:#1f6b4a;--epax-solarrechner-bg:#f6f3ec;--epax-solarrechner-text:#1c1c1c;--epax-solarrechner-on-primary:#fff;--epax-solarrechner-line:color-mix(in srgb,var(--epax-solarrechner-text) 14%,transparent);--epax-solarrechner-muted:color-mix(in srgb,var(--epax-solarrechner-text) 68%,transparent)}"
     + ".epax-solarrechner-panel,.epax-solarrechner-panel *{box-sizing:border-box;font-family:'Segoe UI','Helvetica Neue',sans-serif;font-style:normal}"
     + ".epax-solarrechner-panel [hidden]{display:none}"
-    + ".epax-solarrechner-panel{background:#fff;border:1px solid var(--epax-solarrechner-line);border-radius:16px;padding:18px;color:var(--epax-solarrechner-text);font-weight:400;font-size:16px;line-height:1.45}"
+    + ".epax-solarrechner-panel{background:#fff;border:1px solid var(--epax-solarrechner-line);border-radius:16px;padding:18px;color:var(--epax-solarrechner-text);font-weight:400;font-size:16px;line-height:1.45;width:100%;max-width:640px;box-sizing:border-box}"
     + ".epax-solarrechner-brand{display:flex;gap:12px;align-items:center;margin:0 0 10px}"
     + ".epax-solarrechner-mark,.epax-solarrechner-logo{width:48px;height:48px;border-radius:12px;flex:0 0 auto}"
     + ".epax-solarrechner-logo{object-fit:contain;background:#fff}"
