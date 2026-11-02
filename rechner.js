@@ -7,7 +7,8 @@
      data-name="Firmenname"
      data-phone="+49 …"
      data-email="anfrage@firma.de"
-     data-color="#1F6B4A"></script>
+     data-color="#1F6B4A"
+     data-max-width="800px"></script>
 */
 (function () {
   "use strict";
@@ -244,6 +245,16 @@
     return { lat: row[0], place: row[1] };
   }
 
+  function maxWidth(value) {
+    var text = String(value || "").trim().toLowerCase().replace(/\s+/g, "");
+    if (!text) return "640px";
+    var match = text.match(/^(\d+(?:\.\d+)?)(px)?$/);
+    if (!match) return "640px";
+    var px = Math.round(Number(match[1]));
+    if (!(px >= 240 && px <= 4000)) return "640px";
+    return px + "px";
+  }
+
   function validColor(value) {
     var color = String(value || "").trim();
     return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(color) ? color : "#1F6B4A";
@@ -338,7 +349,7 @@
   }
 
   var CSS = bang(""
-    + ":host{all:initial;display:block;width:100%;max-width:640px;box-sizing:border-box;font-family:'Segoe UI','Helvetica Neue',sans-serif;font-size:16px;line-height:1.45;color:#1c1c1c;--epax-solarrechner-primary:#1f6b4a;--epax-solarrechner-bg:#f6f3ec;--epax-solarrechner-text:#1c1c1c;--epax-solarrechner-on-primary:#fff;--epax-solarrechner-line:color-mix(in srgb,var(--epax-solarrechner-text) 14%,transparent);--epax-solarrechner-muted:color-mix(in srgb,var(--epax-solarrechner-text) 68%,transparent)}"
+    + ":host{all:initial;display:block;width:100%;box-sizing:border-box;font-family:'Segoe UI','Helvetica Neue',sans-serif;font-size:16px;line-height:1.45;color:#1c1c1c;--epax-solarrechner-primary:#1f6b4a;--epax-solarrechner-bg:#f6f3ec;--epax-solarrechner-text:#1c1c1c;--epax-solarrechner-on-primary:#fff;--epax-solarrechner-line:color-mix(in srgb,var(--epax-solarrechner-text) 14%,transparent);--epax-solarrechner-muted:color-mix(in srgb,var(--epax-solarrechner-text) 68%,transparent)}"
     + ".epax-solarrechner-panel,.epax-solarrechner-panel *{box-sizing:border-box;font-family:'Segoe UI','Helvetica Neue',sans-serif;font-style:normal}"
     + ".epax-solarrechner-panel [hidden]{display:none}"
     + ".epax-solarrechner-panel{background:#fff;border:1px solid var(--epax-solarrechner-line);border-radius:16px;padding:18px;color:var(--epax-solarrechner-text);font-weight:400;font-size:16px;line-height:1.45;width:100%;max-width:640px;box-sizing:border-box}"
@@ -431,7 +442,8 @@
       return;
     }
     var shadow = target.shadowRoot || target.attachShadow({ mode: "open" });
-    shadow.innerHTML = "<style>" + CSS + "</style>" + HTML;
+    var widthCap = maxWidth(script.getAttribute("data-max-width"));
+    shadow.innerHTML = "<style>" + CSS + ":host{max-width:" + widthCap + " !important}</style>" + HTML;
     var q = function (selector) { return shadow.querySelector(selector); };
 
     var name = (script.getAttribute("data-name") || "").trim();
@@ -443,6 +455,11 @@
     var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     var panel = q(".epax-solarrechner-panel");
+    target.style.setProperty("max-width", widthCap, "important");
+    target.style.setProperty("width", "100%", "important");
+    target.style.setProperty("box-sizing", "border-box", "important");
+    panel.style.setProperty("max-width", widthCap, "important");
+    panel.style.setProperty("width", "100%", "important");
     panel.style.setProperty("--epax-solarrechner-primary", color, "important");
     panel.style.setProperty("--epax-solarrechner-on-primary", isLight(color) ? "#1c1c1c" : "#ffffff", "important");
     if (name) {
