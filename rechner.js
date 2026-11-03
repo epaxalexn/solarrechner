@@ -3,7 +3,7 @@
 
    Einbindung:
    <div id="pv-rechner"></div>
-   <script src="https://cdn.jsdelivr.net/gh/epaxalexn/solarrechner@main/rechner.js"
+   <script defer src="https://cdn.jsdelivr.net/gh/epaxalexn/solarrechner@main/rechner.js"
      data-name="Firmenname"
      data-phone="+49 …"
      data-email="anfrage@firma.de"
@@ -429,11 +429,7 @@
     + '</section></section>';
 
   function boot() {
-    var script = document.currentScript;
-    if (!script) {
-      var found = document.querySelectorAll("script[src*='rechner.js']");
-      script = found.length ? found[found.length - 1] : null;
-    }
+    var script = embedScript;
     if (!script) return;
     var targetId = script.getAttribute("data-target") || "pv-rechner";
     var target = document.getElementById(targetId);
@@ -443,7 +439,9 @@
     }
     var shadow = target.shadowRoot || target.attachShadow({ mode: "open" });
     var widthCap = maxWidth(script.getAttribute("data-max-width"));
-    shadow.innerHTML = "<style>" + CSS + ":host{max-width:" + widthCap + " !important;margin-left:auto !important;margin-right:auto !important}</style>" + HTML;
+    shadow.innerHTML = "<style>" + CSS
+      + ":host{max-width:" + widthCap + " !important;margin-left:auto !important;margin-right:auto !important;opacity:0 !important;transition:opacity 1s ease !important}"
+      + ":host(.epax-solarrechner-sichtbar){opacity:1 !important}</style>" + HTML;
     var q = function (selector) { return shadow.querySelector(selector); };
 
     var name = (script.getAttribute("data-name") || "").trim();
@@ -621,7 +619,37 @@
       resultNode.hidden = false;
       resultNode.scrollIntoView({ block: "nearest" });
     });
+    reveal(target);
   }
 
-  boot();
+  function reveal(target) {
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function show() {
+      if ("inert" in target) target.inert = false;
+      target.classList.add("epax-solarrechner-sichtbar");
+    }
+    if ("inert" in target) target.inert = true;
+    if (reduce || !("IntersectionObserver" in window)) {
+      show();
+      return;
+    }
+    var observer = new IntersectionObserver(function (entries) {
+      if (entries.some(function (entry) { return entry.isIntersecting; })) {
+        show();
+        observer.disconnect();
+      }
+    }, { threshold: 0 });
+    observer.observe(target);
+  }
+
+  var embedScript = document.currentScript;
+  if (!embedScript) {
+    var foundScripts = document.querySelectorAll("script[src*='rechner.js']");
+    embedScript = foundScripts.length ? foundScripts[foundScripts.length - 1] : null;
+  }
+  if (embedScript) {
+    var embedTargetId = embedScript.getAttribute("data-target") || "pv-rechner";
+    if (document.getElementById(embedTargetId)) boot();
+    else document.addEventListener("DOMContentLoaded", boot);
+  }
 })();
