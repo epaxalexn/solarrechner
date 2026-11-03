@@ -300,7 +300,7 @@
     var lines = [
       "Guten Tag,",
       "",
-      "bitte um eine Einschätzung zu dieser Dachfläche.",
+      "ich bitte um eine Einschätzung zu dieser Dachfläche.",
       "",
       "Standort: " + result.plz + " " + result.place,
       result.summary,
@@ -443,7 +443,7 @@
     }
     var shadow = target.shadowRoot || target.attachShadow({ mode: "open" });
     var widthCap = maxWidth(script.getAttribute("data-max-width"));
-    shadow.innerHTML = "<style>" + CSS + ":host{max-width:" + widthCap + " !important}</style>" + HTML;
+    shadow.innerHTML = "<style>" + CSS + ":host{max-width:" + widthCap + " !important;margin-left:auto !important;margin-right:auto !important}</style>" + HTML;
     var q = function (selector) { return shadow.querySelector(selector); };
 
     var name = (script.getAttribute("data-name") || "").trim();
@@ -457,6 +457,8 @@
     var panel = q(".epax-solarrechner-panel");
     target.style.setProperty("max-width", widthCap, "important");
     target.style.setProperty("width", "100%", "important");
+    target.style.setProperty("margin-left", "auto", "important");
+    target.style.setProperty("margin-right", "auto", "important");
     target.style.setProperty("box-sizing", "border-box", "important");
     panel.style.setProperty("max-width", widthCap, "important");
     panel.style.setProperty("width", "100%", "important");
