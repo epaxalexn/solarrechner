@@ -348,12 +348,28 @@
     });
   }
 
+  var EPAX_HREF = "https://www.epax-solar.de/de/?utm_source=installateur&utm_campaign=solarrechner";
+
+  function epaxHref(installerName) {
+    var content = (installerName || "").trim();
+    if (!content) return EPAX_HREF;
+    return EPAX_HREF + "&utm_content=" + encodeURIComponent(content).replace(/%20/g, "+");
+  }
+  var EPAX_LOGO = "https://cdn.jsdelivr.net/gh/epaxalexn/solarrechner@main/epax%20solar%20pv%20grosshandel%20logo%20350px.webp";
+
   var CSS = bang(""
     + ":host{all:initial;display:block;width:100%;box-sizing:border-box;font-family:'Segoe UI','Helvetica Neue',sans-serif;font-size:16px;line-height:1.45;color:#1c1c1c;--epax-solarrechner-primary:#1f6b4a;--epax-solarrechner-bg:#f6f3ec;--epax-solarrechner-text:#1c1c1c;--epax-solarrechner-on-primary:#fff;--epax-solarrechner-line:color-mix(in srgb,var(--epax-solarrechner-text) 14%,transparent);--epax-solarrechner-muted:color-mix(in srgb,var(--epax-solarrechner-text) 68%,transparent)}"
     + ".epax-solarrechner-panel,.epax-solarrechner-panel *{box-sizing:border-box;font-family:'Segoe UI','Helvetica Neue',sans-serif;font-style:normal}"
     + ".epax-solarrechner-panel [hidden]{display:none}"
     + ".epax-solarrechner-panel{background:#fff;border:1px solid var(--epax-solarrechner-line);border-radius:16px;padding:18px;color:var(--epax-solarrechner-text);font-weight:400;font-size:16px;line-height:1.45;width:100%;max-width:640px;box-sizing:border-box}"
-    + ".epax-solarrechner-brand{display:flex;gap:12px;align-items:center;margin:0 0 10px}"
+    + ".epax-solarrechner-brand{display:flex;gap:12px;align-items:center;justify-content:space-between;margin:0 0 4px}"
+    + ".epax-solarrechner-brand-main{display:flex;gap:12px;align-items:center;min-width:0}"
+    + ".epax-solarrechner-brand-copy{min-width:0}"
+    + ".epax-solarrechner-provider{flex:0 0 auto;line-height:0;margin:0}"
+    + ".epax-solarrechner-provider-logo{display:block;width:56px;height:56px;object-fit:contain;border-radius:10px}"
+    + ".epax-solarrechner-credit{margin:0 0 12px;font-size:.8rem;line-height:1.35;font-weight:400;color:color-mix(in srgb,var(--epax-solarrechner-text) 46%,transparent)}"
+    + ".epax-solarrechner-credit-name{white-space:nowrap}"
+    + ".epax-solarrechner-credit-link{color:inherit;font-weight:400;text-decoration:underline}"
     + ".epax-solarrechner-mark,.epax-solarrechner-logo{width:48px;height:48px;border-radius:12px;flex:0 0 auto}"
     + ".epax-solarrechner-logo{object-fit:contain;background:#fff}"
     + ".epax-solarrechner-mark{display:grid;place-items:center;background:var(--epax-solarrechner-primary);color:var(--epax-solarrechner-on-primary);font-weight:700}"
@@ -392,11 +408,13 @@
     + ".epax-solarrechner-text-button{margin-left:8px;padding:0;border:0;background:transparent;color:var(--epax-solarrechner-primary);font-size:.8rem;font-weight:700;text-decoration:underline;cursor:pointer;box-shadow:none}"
     + ".epax-solarrechner-contact{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}"
     + ".epax-solarrechner-contact .epax-solarrechner-hint{grid-column:1 / -1;margin:0}"
-    + "@media (max-width:520px){.epax-solarrechner-row,.epax-solarrechner-metrics,.epax-solarrechner-contact{grid-template-columns:1fr}.epax-solarrechner-panel{padding:14px}}");
+    + "@media (max-width:520px){.epax-solarrechner-row,.epax-solarrechner-metrics,.epax-solarrechner-contact{grid-template-columns:1fr}.epax-solarrechner-panel{padding:14px}.epax-solarrechner-provider-logo{width:44px;height:44px}.epax-solarrechner-title{font-size:1.25rem}}");
 
   var HTML = ""
     + '<section class="epax-solarrechner-panel">'
-    + '<header class="epax-solarrechner-brand"><img id="logo" class="epax-solarrechner-logo" alt="" hidden><div id="mark" class="epax-solarrechner-mark" hidden>PV</div><div><p class="epax-solarrechner-eyebrow" id="brand-name" hidden></p><h1 class="epax-solarrechner-title">Was passt auf eine Dachfläche?</h1></div></header>'
+    + '<header class="epax-solarrechner-brand"><div class="epax-solarrechner-brand-main"><img id="logo" class="epax-solarrechner-logo" alt="" hidden><div id="mark" class="epax-solarrechner-mark" hidden>PV</div><div class="epax-solarrechner-brand-copy"><p class="epax-solarrechner-eyebrow" id="brand-name" hidden></p><h1 class="epax-solarrechner-title">Was passt auf eine Dachfläche?</h1></div></div>'
+    + '<a class="epax-solarrechner-provider" href="' + EPAX_HREF + '" target="_blank" rel="noopener" aria-label="Epax Solar PV-Großhandel"><img class="epax-solarrechner-provider-logo" src="' + EPAX_LOGO + '" alt="" width="56" height="56"></a></header>'
+    + '<p class="epax-solarrechner-credit">Solar-Rechner bereitgestellt von <span class="epax-solarrechner-credit-name"><a class="epax-solarrechner-credit-link" href="' + EPAX_HREF + '" target="_blank" rel="noopener">Epax Solar</a> PV-Großhandel</span></p>'
     + '<p class="epax-solarrechner-intro">Tragen Sie die Daten einer Dachfläche ein. Sie bekommen eine grobe Einschätzung zu Größe, Jahresertrag und Speicher.</p>'
     + '<p id="error" class="epax-solarrechner-error" hidden></p>'
     + '<form id="calc-form" class="epax-solarrechner-form">'
@@ -466,6 +484,14 @@
       q("#brand-name").hidden = false;
       q("#brand-name").textContent = name;
     }
+    var epaxLink = epaxHref(name);
+    q(".epax-solarrechner-provider").setAttribute("href", epaxLink);
+    q(".epax-solarrechner-credit-link").setAttribute("href", epaxLink);
+    var providerLogo = q(".epax-solarrechner-provider-logo");
+    providerLogo.addEventListener("error", function () {
+      q(".epax-solarrechner-provider").hidden = true;
+    });
+
     var logo = q("#logo");
     var mark = q("#mark");
     if (logoUrl) {
